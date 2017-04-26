@@ -95,8 +95,11 @@ def qlearning(s1, a, s2):
     return
 
 episodes = 100
+labels=[]
+promedios=[]
 for mode in ("greedy", "e-greedy","other"):
     # Episodes
+    labels.append(mode)
     numberActions = 0
 
     Q = np.zeros((height * width, num_actions))
@@ -114,33 +117,37 @@ for mode in ("greedy", "e-greedy","other"):
     #print Q
 
     print "Numero promedio de acciones ",mode," ->", numberActions/episodes
+    promedios.append(numberActions/episodes)
 
 
-#Q matrix plot
-
-s = 0
-ax = plt.axes()
-ax.axis([-1, width + 1, -1, height + 1])
-
-for j in xrange(height):
-
-    plt.plot([0, width], [j, j], 'b')
-    for i in xrange(width):
-        plt.plot([i, i], [0, height], 'b')
-
-        direction = np.argmax(Q[s])
-        if s != final_state:
-            if direction == 0:
-                ax.arrow(i + 0.5, 0.75 + j, 0, -0.35, head_width=0.08, head_length=0.08, fc='k', ec='k')
-            if direction == 1:
-                ax.arrow(0.25 + i, j + 0.5, 0.35, 0., head_width=0.08, head_length=0.08, fc='k', ec='k')
-            if direction == 2:
-                ax.arrow(i + 0.5, 0.25 + j, 0, 0.35, head_width=0.08, head_length=0.08, fc='k', ec='k')
-            if direction == 3:
-                ax.arrow(0.75 + i, j + 0.5, -0.35, 0., head_width=0.08, head_length=0.08, fc='k', ec='k')
-        s += 1
-
-    plt.plot([i+1, i+1], [0, height], 'b')
-    plt.plot([0, width], [j+1, j+1], 'b')
-
+plt.bar([1,2,3],promedios, align="center")
+plt.xticks([1,2,3],labels)
 plt.show()
+#Q matrix plot
+#
+# s = 0
+# ax = plt.axes()
+# ax.axis([-1, width + 1, -1, height + 1])
+#
+# for j in xrange(height):
+#
+#     plt.plot([0, width], [j, j], 'b')
+#     for i in xrange(width):
+#         plt.plot([i, i], [0, height], 'b')
+#
+#         direction = np.argmax(Q[s])
+#         if s != final_state:
+#             if direction == 0:
+#                 ax.arrow(i + 0.5, 0.75 + j, 0, -0.35, head_width=0.08, head_length=0.08, fc='k', ec='k')
+#             if direction == 1:
+#                 ax.arrow(0.25 + i, j + 0.5, 0.35, 0., head_width=0.08, head_length=0.08, fc='k', ec='k')
+#             if direction == 2:
+#                 ax.arrow(i + 0.5, 0.25 + j, 0, 0.35, head_width=0.08, head_length=0.08, fc='k', ec='k')
+#             if direction == 3:
+#                 ax.arrow(0.75 + i, j + 0.5, -0.35, 0., head_width=0.08, head_length=0.08, fc='k', ec='k')
+#         s += 1
+#
+#     plt.plot([i+1, i+1], [0, height], 'b')
+#     plt.plot([0, width], [j+1, j+1], 'b')
+#
+# plt.show()
