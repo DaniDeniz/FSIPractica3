@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # Environment size
 width = 5
-height = 17
+height = 16
 
 # Actions
 num_actions = 4
@@ -15,6 +15,7 @@ actions_list = {"UP": 0,
                 "DOWN": 2,
                 "LEFT": 3
                 }
+list_actions = {v: k for k, v in actions_list.iteritems()}
 
 actions_vectors = {"UP": (-1, 0),
                    "RIGHT": (0, 1),
@@ -50,6 +51,20 @@ def getActions(state):
         actions.append("UP")
     return actions
 
+def greedy(state):
+    maxQAction = np.argmax(Q[state])
+    if max(Q[state]) != 0:
+        return list_actions[maxQAction]
+    return random.choice(getActions(state))
+
+def getNextAction(state,mode):
+    if mode == "greedy":
+        return greedy(state)
+    elif mode == "e-greedy":
+        prob = random.random()
+        if prob > 0.3:
+            return greedy(state)
+    return random.choice(getActions(state))
 
 def getRndAction(state):
     return random.choice(getActions(state))
@@ -80,21 +95,28 @@ def qlearning(s1, a, s2):
     return
 
 
-# Episodes
-for i in xrange(100):
-    state = getRndState()
-    while state != final_state:
-        action = getRndAction(state)
-        y = getStateCoord(state)[0] + actions_vectors[action][0]
-        x = getStateCoord(state)[1] + actions_vectors[action][1]
-        new_state = getState(y, x)
-        qlearning(state, actions_list[action], new_state)
-        state = new_state
+for mode in ("greedy", "e-greedy", "other"):
+    # Episodes
+    numberActions = 0
+    episodes = 100
+    Q = np.zeros((height * width, num_actions))
+    for i in xrange(episodes):
+        #state = getState(0,0)
+        state = getRndState()
+        while state != final_state:
+            action = getNextAction(state,mode)
+            y = getStateCoord(state)[0] + actions_vectors[action][0]
+            x = getStateCoord(state)[1] + actions_vectors[action][1]
+            new_state = getState(y, x)
+            qlearning(state, actions_list[action], new_state)
+            state = new_state
+            numberActions += 1
+    #print Q
 
-print Q
+    print "Numero promedio de acciones ",mode," ->", numberActions/episodes
 
 
-# Q matrix plot
+#Q matrix plot
 
 s = 0
 ax = plt.axes()
