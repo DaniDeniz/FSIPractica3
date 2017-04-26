@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # Environment size
 width = 5
-height = 16
+height = 17
 
 # Actions
 num_actions = 4
