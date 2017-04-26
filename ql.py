@@ -94,11 +94,11 @@ def qlearning(s1, a, s2):
     Q[s1][a] = Rewards[s2] + discount * max(Q[s2])
     return
 
-
-for mode in ("greedy", "e-greedy", "other"):
+episodes = 100
+for mode in ("greedy", "e-greedy","other"):
     # Episodes
     numberActions = 0
-    episodes = 100
+
     Q = np.zeros((height * width, num_actions))
     for i in xrange(episodes):
         #state = getState(0,0)
