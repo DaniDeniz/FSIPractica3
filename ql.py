@@ -57,12 +57,11 @@ def greedy(state):
         return list_actions[maxQAction]
     return random.choice(getActions(state))
 
-def getNextAction(state,mode):
+def getNextAction(state,mode,prob=None):
     if mode == "greedy":
         return greedy(state)
     elif mode == "e-greedy":
-        prob = random.random()
-        if prob > 0.3:
+        if random.random() > prob:
             return greedy(state)
     return random.choice(getActions(state))
 
@@ -97,8 +96,9 @@ def qlearning(s1, a, s2):
 episodes = 100
 labels=[]
 promedios=[]
-for mode in ("greedy", "e-greedy","other"):
+for mode in ("greedy", "e-greedy","aleatorio"):
     # Episodes
+
     labels.append(mode)
     numberActions = 0
 
@@ -107,7 +107,7 @@ for mode in ("greedy", "e-greedy","other"):
         #state = getState(0,0)
         state = getRndState()
         while state != final_state:
-            action = getNextAction(state,mode)
+            action = getNextAction(state,mode,0.075)
             y = getStateCoord(state)[0] + actions_vectors[action][0]
             x = getStateCoord(state)[1] + actions_vectors[action][1]
             new_state = getState(y, x)
@@ -122,6 +122,7 @@ for mode in ("greedy", "e-greedy","other"):
 
 plt.bar([1,2,3],promedios, align="center")
 plt.xticks([1,2,3],labels)
+plt.ylabel("Promedio de acciones")
 plt.show()
 #Q matrix plot
 #
